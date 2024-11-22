@@ -21,3 +21,50 @@
 - generation of the bill with necessary details
 - appropriate imformation for all views requested
 - exit the application
+
+### Database Thoughts
+
+| (UniqueIncID)PK | PatientID | DoctorID |  Date   | Time  |         Reason         |
+| :-------------: | :-------: | :------: | :-----: | :---: | :--------------------: |
+|        1        |    23     |    45    | 5/5/25  | 15:00 |        Checkup         |
+|        2        |    56     |    12    | 5/7/25  | 10:00 |    Annual Physical     |
+|        3        |    89     |    33    | 5/9/25  | 14:30 | Follow-up Consultation |
+|        4        |    41     |    67    | 5/12/25 | 11:00 |      Vaccination       |
+
+where the views will show appointments based on whether _date == specified date_,
+
+#### Pseudocode
+
+##### _Today / Tomorrow / Searched View_
+
+Begin
+If search, query = search date input
+_date will be searched in the form 11/06/25_
+else, query = today
+Try to Connect to Database
+Get appointments where Date == `query`.date()
+Catch
+throw SQLException and ask user to login/ try again
+End
+
+#### _New Appointment_
+
+Begin
+Present a form in the format
+_( userID, doctorName, date, time, summaryReason ) = required_
+if ( fields full ),
+call the Appointment Constructor with the form
+if( DoctorAvailable( id, date, time ) ), _submit form_
+else, Doctor not available, input different doctor
+else, user cant submit form
+End
+
+###### DoctorAvailable()
+
+Begin
+takes doctorID, date and time
+try to connect to database
+if(_doctorID table does not contain the date/time_),
+return false
+else, return true
+End
