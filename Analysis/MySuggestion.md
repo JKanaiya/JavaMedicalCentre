@@ -4,10 +4,10 @@
   - its types, and its details
   - forms and their validation
 - ####  crud of appointments
-  - Create Appiontments | ( *Access Level = Any* )
-  - Update Appiontments | ( *Access Level = Any* ) 
+  - Create Appointments | ( *Access Level = Any* )
+  - Update Appointments | ( *Access Level = Any* ) 
     - Patient id, Doctor id should be immutable
-  - Delete Appiontments | ( *Access Level = Any* )  
+  - Delete Appointments | ( *Access Level = Any* )  
     - On Completion of Appointment, a Generate Bill Window Should pop up with the details of the appointment(immutable)
 - exit
 - views based on doctors or patients
@@ -57,17 +57,6 @@ Catch
 throw SQLException and ask user to login/ try again
 End
 
-#### _New Appointment_
-
-Begin
-Present a form in the format
-_( userID, doctorName, date, time, summaryReason ) = required_
-if ( fields full ),
-call the Appointment Constructor with the form
-if( DoctorAvailable( id, date, time ) ), _submit form_
-else, Doctor not available, input different doctor
-else, user cant submit form
-End
 
 ###### DoctorAvailable()
 
@@ -75,6 +64,6 @@ Begin
 takes doctorID, date and time
 try to connect to database
 if(_doctorID table does not contain the date/time_),
-return false
-else, return true
+return true 
+else, return false 
 End
