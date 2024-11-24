@@ -1,35 +1,45 @@
 #### Processes Involved in the system
-
-- database query
-- crud of appointments
-  - logins, its types, and its details
+- Search
+- logins
+  - its types, and its details
   - forms and their validation
-- exits
-- searches and views based on doctors or patients
+- ####  crud of appointments
+  - Create Appiontments | ( *Access Level = Any* )
+  - Update Appiontments | ( *Access Level = Any* ) 
+    - Patient id, Doctor id should be immutable
+  - Delete Appiontments | ( *Access Level = Any* )  
+    - On Completion of Appointment, a Generate Bill Window Should pop up with the details of the appointment(immutable)
+- exit
+- views based on doctors or patients
 - view of appointments of specified day with the default being the current day
-- generate bills
 - crud of patient history
+  - appointments in the table for the specified patient 
+  - changing whether appointments have been paid (Access level = all)
 - crud of doctor history
+  - appointments in the table for the specified doctor
+- Register new Users (*Access Level = Admin*)
+- Delete Users (*Access Level = Admin*)
 
 #### IO
 
 - Login to both the admin accounts and the regular staff accounts
   - whether the login was successful
-- After login, user should be able to see the appointments for the given day, ( maybe tie the amount of unique 'doctor' logins for the day to be counted and shown on the home screen as "Doctors available" )
-- staff should be able to create an appointment, (idk how the doctors will link themselves to said appointment), with details provided by the customer, and the date set for the appointment
-- doctors i assume should have admin access to update details, but idk about deleting
+- After login, user should be able to see the appointments for the given day 
+- After login, doctor should be able to see the appointments for the given day 
+- staff should be able to create an appointment, with details provided by the customer, and the date set for the appointment
 - generation of the bill with necessary details
-- appropriate imformation for all views requested
+- appropriate information for all views requested
 - exit the application
 
 ### Database Thoughts
+#### Appointments 
 
-| (UniqueIncID)PK | PatientID | DoctorID |  Date   | Time  |         Reason         |
-| :-------------: | :-------: | :------: | :-----: | :---: | :--------------------: |
-|        1        |    23     |    45    | 5/5/25  | 15:00 |        Checkup         |
-|        2        |    56     |    12    | 5/7/25  | 10:00 |    Annual Physical     |
-|        3        |    89     |    33    | 5/9/25  | 14:30 | Follow-up Consultation |
-|        4        |    41     |    67    | 5/12/25 | 11:00 |      Vaccination       |
+| (UniqueIncID)PK | PatientID | DoctorID |  Date   | Time  |         Reason         | Paid   |
+| :-------------: | :-------: | :------: | :-----: | :---: | :--------------------: |:------:|
+|        1        |    23     |    45    | 5/5/25  | 15:00 |        Checkup         | false  |
+|        2        |    56     |    12    | 5/7/25  | 10:00 |    Annual Physical     |  true  |
+|        3        |    89     |    33    | 5/9/25  | 14:30 | Follow-up Consultation | false  |
+|        4        |    41     |    67    | 5/12/25 | 11:00 |      Vaccination       |  true  |
 
 where the views will show appointments based on whether _date == specified date_,
 
