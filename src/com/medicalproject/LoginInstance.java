@@ -1,8 +1,6 @@
 package src.com.medicalproject;
-
 import java.util.Scanner;
-
-import static src.com.medicalproject.DBQUeries.validateUser;
+import static src.com.medicalproject.DBQueries.validateUser;
 
 public class LoginInstance {
 
