@@ -1,19 +1,14 @@
 package src.com.medicalproject;
 
 import com.zaxxer.hikari.HikariDataSource;
-
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDateTime;
-
 import static src.com.medicalproject.LoginInstance.role;
 import static src.com.medicalproject.LoginInstance.setRole;
+import static src.com.medicalproject.TimeControl.convertLDTToTimestamp;
 
 public class DBQueries {
-
-    public Timestamp convertLDTToTimestamp(LocalDateTime dateTime){
-        return Timestamp.valueOf(dateTime);
-    }
     static DataSource dataSource = createDataSource();
 
     public static boolean validateUser(int ID, String password){

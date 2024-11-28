@@ -1,7 +1,6 @@
 package src.com.medicalproject;
 
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
