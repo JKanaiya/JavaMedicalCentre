@@ -1,23 +1,55 @@
-package src.com.medicalproject;
+package com.medicalproject.DB;
 
 import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDateTime;
-import static src.com.medicalproject.LoginInstance.role;
-import static src.com.medicalproject.LoginInstance.setRole;
-import static src.com.medicalproject.TimeControl.convertLDTToTimestamp;
+import java.util.HashMap;
+import java.util.Map;
 
-public class DBQueries {
+import static com.medicalproject.LoginInstance.role;
+import static com.medicalproject.LoginInstance.setRole;
+import static com.medicalproject.TimeControl.convertLDTToTimestamp;
+
+public class DBCRUD {
     static DataSource dataSource = createDataSource();
 
-    public static boolean validateUser(int ID, String password){
-        // try(Connection conn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=MedicalJavaDb;" + "encrypt=true;"
-        //         + "trustServerCertificate=true;"  , "", "" );){
-        try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("Select * from USERS where id = ?");
-            ps.setInt(1, ID);
+    public static Map<Integer, String> getSpecializedMap(String Specialization, LocalDateTime dateTime){
+
+        Map<Integer, String> idName = new HashMap<>(); // Initialize the main map to hold the ID and Name of the Doctors to send back
+
+        String sqlPS = "SElECT DoctorID, Name FROM Doctors WHERE Specialization = ? AND DoctorID NOT IN (" +
+                "SELECT DoctorID FROM Appointments WHERE Specialization = ? AND AppointmentTime BETWEEN ? AND ?)";
+
+        try(Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlPS)){
+
+            ps.setString(1, Specialization);
+            ps.setString(2, Specialization);
+            ps.setTimestamp(3, convertLDTToTimestamp(dateTime.minusHours(1)));
+            ps.setTimestamp(4, convertLDTToTimestamp(dateTime.plusHours(1)));
+
             ResultSet resSet = ps.executeQuery();
+
+            while(resSet.next()){
+                idName.put(resSet.getInt("DoctorID"), resSet.getString("Name"));
+            }
+        }
+        catch (SQLException sqle) {
+            System.err.println("Error: " + sqle.getLocalizedMessage());
+            sqle.printStackTrace();
+        }
+        return idName;
+    }
+    public static boolean validateUser(int ID, String password){
+        String sqlPS = "Select * from USERS where id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)){
+
+            ps.setInt(1, ID);
+
+            ResultSet resSet = ps.executeQuery();
+
             if(resSet.next()){
                 setRole(resSet.getString("Role"));
                 return password.equals(resSet.getString("Password"));
@@ -29,17 +61,20 @@ public class DBQueries {
         catch (SQLException sqle){
             sqle.printStackTrace();
             return false;
+//            warn the user that there was an error and to try again
         }
     }
     public static void registerUser(int ID, String password, String role){
-        // try(Connection conn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=MedicalJavaDb;" + "encrypt=true;"
-        //         + "trustServerCertificate=true;"  , "", "" );){
-        try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("INSERT into USERS(ID, Password, Role) VALUES (? , ? , ?)");
+        String sqlPS = "INSERT into USERS(ID, Password, Role) VALUES (? , ? , ?)";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+
             ps.setInt(1, ID);
             ps.setString(2, password);
             ps.setString(3, role);
+
             int insertCount = ps.executeUpdate();
+            // add a trigger here to show a success or failure if the execution was successful
             System.out.println(insertCount);
         }
         catch (SQLException sqle){
@@ -49,16 +84,18 @@ public class DBQueries {
     public static void registerDoctor(int ID, String password, String Specialization, String Name, int PhoneNumber, String Email){
         String role = "Doctor";
         registerUser(ID, password, role);
-        // try(Connection conn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=MedicalJavaDb;" + "encrypt=true;"
-        //         + "trustServerCertificate=true;"  , "sa", "" );){
-        try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("INSERT into DOCTORS(ID, Name, Specialization, PhoneNo, Email) VALUES (?,?,?,?,?)");
+        String sqlPS = "INSERT into DOCTORS(ID, Name, Specialization, PhoneNo, Email) VALUES (?,?,?,?,?)";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)){
+
             ps.setInt(1, ID);
             ps.setString(2, Name);
             ps.setString(3, Specialization);
             ps.setInt(4, PhoneNumber);
             ps.setString(5, Email);
+
             int insertCount = ps.executeUpdate();
+
             System.out.println(insertCount);
         }
         catch (SQLException sqle){
@@ -76,12 +113,14 @@ public class DBQueries {
 //        optionally add more details to the admin ( Phone number, email )
     }
     public static void removeUser(int ID){
-            // try(Connection conn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=MedicalJavaDb;" + "encrypt=true;"
-            //         + "trustServerCertificate=true;"  , "sa", "" );) {
-            try (Connection conn = dataSource.getConnection()) {
-                PreparedStatement ps = conn.prepareStatement("DELETE from USERS where ID = ? )");
+        String sqlPS = "DELETE from USERS where ID = ? )";
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+
                 ps.setInt(1, ID);
+
                 int insertCount = ps.executeUpdate();
+
                 if(insertCount == 1){
                     System.out.println("Successful Deletion");
                 }
@@ -91,13 +130,15 @@ public class DBQueries {
             }
     }
     public static void removeDoctor(int ID){
+        String sqlPS = "DELETE from DOCTORS where ID = ? )";
         if(role.equals("Admin")){
-            // try(Connection conn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=MedicalJavaDb;" + "encrypt=true;"
-            //         + "trustServerCertificate=true;"  , "sa", "" );) {
-            try (Connection conn = dataSource.getConnection()) {
-                PreparedStatement ps = conn.prepareStatement("DELETE from DOCTORS where ID = ? )");
+            try (Connection conn = dataSource.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+
                 ps.setInt(1, ID);
+
                 int insertCount = ps.executeUpdate();
+
                 if(insertCount == 1){
                     System.out.println("Successful Deletion of Doctor from Doctors Table");
                 }
@@ -110,12 +151,14 @@ public class DBQueries {
     }
     public static void removeStaff(int ID){
         if(role.equals("Admin")){
-            // try(Connection conn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=MedicalJavaDb;" + "encrypt=true;"
-            //         + "trustServerCertificate=true;"  , "sa", "" );) {
-            try (Connection conn = dataSource.getConnection()) {
-                PreparedStatement ps = conn.prepareStatement("DELETE from STAFF where ID = ? )");
+            String sqlPS = "DELETE from STAFF where ID = ? )";
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+
                 ps.setInt(1, ID);
+
                 int insertCount = ps.executeUpdate();
+
                 if(insertCount == 1){
                     System.out.println("Successful Deletion of STAFF from STAFF Table");
                 }
@@ -126,24 +169,20 @@ public class DBQueries {
         }
         removeUser(ID);
     }
-
-    /**
-     * Method to takes data of the appointment and try to add it to the database
-     * @param PatientID
-     * @param DoctorID
-     * @param reason
-     * @param time
-     * @param date
-     */
-    public void addAppointment(int PatientID, int DoctorID, String reason, LocalDateTime dateTime){
+    public void addAppointment(int PatientID, int DoctorID, String reason, LocalDateTime dateTime, String Specialization){
         Timestamp convertedTimestamp = convertLDTToTimestamp(dateTime);
-        try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO Appointments(PatientID, DoctorID, AppointmentTime, Reason) VALUES(?,?,?,?)");
+        String sqlPS = "INSERT INTO Appointments(PatientID, DoctorID, AppointmentTime, Reason, Specialization) VALUES(?,?,?,?,?)";
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+
             ps.setInt(1,PatientID);
             ps.setInt(2 ,DoctorID);
             ps.setTimestamp(3 , convertedTimestamp);
             ps.setString(4 ,reason);
+            ps.setString(5 ,Specialization);
+
             int insertCount = ps.executeUpdate();
+
             System.out.println(insertCount);
         } catch (SQLException e) {
             e.printStackTrace();

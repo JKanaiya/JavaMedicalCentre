@@ -1,4 +1,4 @@
-package src.com.medicalproject;
+package com.medicalproject;
 /**
  *
  * @author robert
