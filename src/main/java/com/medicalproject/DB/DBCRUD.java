@@ -2,12 +2,14 @@ package com.medicalproject.DB;
 
 import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import static com.medicalproject.LoginInstance.role;
-import static com.medicalproject.LoginInstance.setRole;
+
+import static com.medicalproject.Controllers.LoginController.getRole;
+import static com.medicalproject.Controllers.LoginController.setRole;
 import static com.medicalproject.TimeControl.convertLDTToTimestamp;
 
 /**
@@ -117,7 +119,7 @@ public class DBCRUD {
     public static void registerStaff(int StaffID, String password, String Name, int PhoneNumber, String Email){
         String role = "Staff";
         registerUser(StaffID, password, role);
-        if(role.equals("Admin")){
+        if(getRole().equals("Admin")){
             String sqlPS = "INSERT INTO STAFF(StaffID, Name, PhoneNumber, Email) VALUES ( ?,?,?,? )";
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement(sqlPS)) {
@@ -162,7 +164,7 @@ public class DBCRUD {
     }
     public static void removeDoctor(int ID){
         String sqlPS = "DELETE from DOCTORS where ID = ? )";
-        if(role.equals("Admin")){
+        if(getRole().equals("Admin")){
             try (Connection conn = dataSource.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sqlPS)) {
 
@@ -181,7 +183,7 @@ public class DBCRUD {
         removeUser(ID);
     }
     public static void removeStaff(int ID){
-        if(role.equals("Admin")){
+        if(getRole().equals("Admin")){
             String sqlPS = "DELETE from STAFF where StaffID = ? )";
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement(sqlPS)) {
@@ -201,7 +203,7 @@ public class DBCRUD {
         removeUser(ID);
     }
     public static void updateDoctor(int DoctorID, String Specialization, int PhoneNumber,  String Email){
-        if(role.equals("Admin")){
+        if(getRole().equals("Admin")){
             String sqlPS = "UPDATE Doctors SET Specialization = ?, PhoneNumber = ?, Email = ? WHERE DoctorID = ?";
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement(sqlPS)) {
@@ -223,7 +225,7 @@ public class DBCRUD {
         }
     }
     public static void updateStaff(int StaffID, int PhoneNumber, String Email){
-        if(role.equals("Admin")){
+        if(getRole().equals("Admin")){
             String sqlPS = "UPDATE Staff SET PhoneNumber = ?, Email = ? WHERE StaffID = ?";
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement(sqlPS)) {
@@ -244,7 +246,7 @@ public class DBCRUD {
         }
     }
     public static void updatePatient(int PatientID, String Address, int Age,  String BloodGroup, Double Weight, Double Height){
-        if(role.equals("Admin")){
+        if(getRole().equals("Admin")){
             String sqlPS = "UPDATE Patients SET Address = ?, Age = ?, BloodGroup = ? , Weight = ? , Height = ? WHERE PatientID = ?";
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement(sqlPS)) {
@@ -286,6 +288,55 @@ public class DBCRUD {
             e.printStackTrace();
         }
     }
+    public static void addBill(int BillID, int PatientID, BigDecimal BillAmount, LocalDateTime BillDate,  Boolean BillPaid){
+        String sqlPS = "INSERT INTO Bills(BillID, PatientID, BillAmount, BillDate, BillPaid) VALUES(?,?,?,?,?)";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+            ps.setInt(1, BillID);
+            ps.setInt(2, PatientID);
+            ps.setBigDecimal(3, BillAmount);
+            ps.setTimestamp(4, convertLDTToTimestamp(BillDate));
+            ps.setBoolean(5, BillPaid);
+            int insertCount = ps.executeUpdate();
+            System.out.println(insertCount);
+        }
+        catch(SQLException sqle){
+            System.err.println(sqle.getLocalizedMessage());
+        }
+    }
+    public static void updateBillPaidState(int BillID, Boolean BillPaid, String ModeOfPayment){
+        String sqlPS = "UPDATE Bills SET BillPaid = ? , ModeOfPayment = ? WHERE BillID = ? ";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+            ps.setInt(1, BillID);
+            ps.setBoolean(2, BillPaid);
+            ps.setString(3, ModeOfPayment);
+        }
+        catch (SQLException sqle){
+            System.err.println(sqle.getLocalizedMessage());
+
+        }
+    }
+    public static String getNewID(String table, String column){
+        int newID = 0;
+        String sqlPS = "SELECT MAX(  " + column + " ) from " + table;
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+            ResultSet resSet = ps.executeQuery();
+            if(!resSet.next()){
+                newID = 1;
+            }
+            else{
+                newID = resSet.getInt(1);
+            }
+        }
+        catch (SQLException sqle){
+            System.err.println(sqle.getLocalizedMessage());
+
+        }
+        return Integer.toString(newID + 1);
+    }
+
     private static DataSource createDataSource(){
         HikariDataSource ds = new HikariDataSource();
         ds.setJdbcUrl("jdbc:sqlserver://localhost:1433;databaseName=MedicalJavaDb");

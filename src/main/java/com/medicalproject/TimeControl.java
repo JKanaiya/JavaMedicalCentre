@@ -31,5 +31,4 @@ public class TimeControl {
     public static Timestamp convertLDTToTimestamp(LocalDateTime dateTime){
         return Timestamp.valueOf(dateTime);
     }
-
 }
