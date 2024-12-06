@@ -125,20 +125,20 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" prefHeight="55.0" prefWidth="168.0">
+                  <VBox alignment="CENTER" prefHeight="67.0" prefWidth="142.0">
                      <children>
                         <Label text="Address:" textFill="WHITE">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label fx:id="patientAddress" prefHeight="21.0" prefWidth="47.0" textFill="#00d9b5">
+                        <Label fx:id="patientAddress" prefHeight="21.0" prefWidth="138.0" textFill="#00d9b5">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </Label>
                      </children>
-                  </HBox>
+                  </VBox>
                </children>
             </HBox>
             </children>

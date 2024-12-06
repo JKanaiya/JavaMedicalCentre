@@ -9,10 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.math.BigInteger;
-
 import static com.medicalproject.DB.DBCRUD.updateBillPaidState;
-import static com.medicalproject.DB.DBCRUD.updateDoctor;
 
 public class UpdateBillController {
 

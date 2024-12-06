@@ -1,7 +1,7 @@
 package com.medicalproject.DB;
 
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -20,13 +20,15 @@ import static com.medicalproject.TimeControl.*;
  */
 
 public class DBCRUD {
-    static DataSource dataSource = createDataSource();
-    /**
-     * Method to get a map ( DoctorID - Name ) of Doctors that will realistically be available in the dateTime.
+//    static DataSource dataSource = createDataSource();
+    /* * Method to get a map ( DoctorID - Name ) of Doctors that will realistically be available in the dateTime.
      * @param Specialization
      * @param dateTime
      * @return  Map ( DoctorID - Name ) of realistically available Doctors
      */
+    static HikariConfig config = new HikariConfig("config.properties");
+    static HikariDataSource dataSource = new HikariDataSource(config);
+
     public static Map<Integer, String> getSpecializedMap(String Specialization, LocalDateTime dateTime){
         Map<Integer, String> idName = new HashMap<>(); // Initialize the map to hold the ID and Name of the Doctors to return
 //         Declare String with Parameters for PreparedStatement.
@@ -492,13 +494,90 @@ public class DBCRUD {
         }
         return matchedAppointments;
     }
-    private static DataSource createDataSource(){
-        HikariDataSource ds = new HikariDataSource();
-        ds.setJdbcUrl("jdbc:sqlserver://localhost:1433;databaseName=MedicalJavaDb");
-        ds.setUsername("sa");
-        ds.setPassword("31F0rtkn0cks12");
-        ds.addDataSourceProperty("trustServerCertificate", "true");
-        ds.addDataSourceProperty("encrypt", "true");
-        return ds;
+    public static List<Map<String,String>> getFutureAppointments(){
+        List<Map<String, String>> futureAppointments = new ArrayList<>();
+        String sqlPS = "Select * from Appointments WHERE AppointmentTime > ?";    // Using List<Map> instead of Map to preserve all records even if names are duplicate
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+            ps.setTimestamp(1, convertLDTToTimestamp(LocalDateTime.now()));
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                // Create a map for each appointment's details
+                Map<String, String> appointmentDetails = new HashMap<>();
+
+                // Store each field separately for easier access and display
+                appointmentDetails.put("patientID", String.valueOf(resultSet.getInt("PatientID")));
+                appointmentDetails.put("doctorID", String.valueOf(resultSet.getInt("DoctorID")));
+                appointmentDetails.put("specialization", resultSet.getString("Specialization"));
+                appointmentDetails.put("time", getTimeFromLDT(resultSet.getTimestamp("AppointmentTime").toLocalDateTime()));
+                appointmentDetails.put("date", getDateFromLDT(resultSet.getTimestamp("AppointmentTime").toLocalDateTime()));
+                appointmentDetails.put("reason", resultSet.getString("Reason"));
+
+                futureAppointments.add(appointmentDetails);
+            }
+        } catch (SQLException sqle) {
+            System.err.println(sqle.getLocalizedMessage());
+        }
+        return futureAppointments;
+    }
+    public static List<Map<String,String>> getDoctorTodayAppointments(int docID){
+        List<Map<String, String>> todayDoctorAppointments = new ArrayList<>();
+        String sqlPS = "Select * from Appointments WHERE AppointmentTime BETWEEN ? AND ? AND DoctorID = ?";    // Using List<Map> instead of Map to preserve all records even if names are duplicate
+        LocalDateTime dateTime = LocalDateTime.now();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+            ps.setTimestamp(1, convertLDTToTimestamp(dateTime));
+            ps.setTimestamp(2, convertLDTToTimestamp(dateTime.plusDays(1)));
+            ps.setInt(3, docID);
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                // Create a map for each appointment's details
+                Map<String, String> appointmentDetails = new HashMap<>();
+
+                // Store each field separately for easier access and display
+                appointmentDetails.put("patientID", String.valueOf(resultSet.getInt("PatientID")));
+                appointmentDetails.put("doctorID", String.valueOf(resultSet.getInt("DoctorID")));
+                appointmentDetails.put("specialization", resultSet.getString("Specialization"));
+                appointmentDetails.put("time", getTimeFromLDT(resultSet.getTimestamp("AppointmentTime").toLocalDateTime()));
+                appointmentDetails.put("date", getDateFromLDT(resultSet.getTimestamp("AppointmentTime").toLocalDateTime()));
+                appointmentDetails.put("reason", resultSet.getString("Reason"));
+
+                todayDoctorAppointments.add(appointmentDetails);
+            }
+        } catch (SQLException sqle) {
+            System.err.println(sqle.getLocalizedMessage());
+        }
+        return todayDoctorAppointments;
+    }
+    public static List<Map<String,String>> getTodayAppointments(){
+        List<Map<String, String>> futureAppointments = new ArrayList<>();
+        String sqlPS = "Select * from Appointments WHERE AppointmentTime BETWEEN ? AND ?";    // Using List<Map> instead of Map to preserve all records even if names are duplicate
+        LocalDateTime dateTime = LocalDateTime.now();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+            ps.setTimestamp(1, convertLDTToTimestamp(dateTime));
+            ps.setTimestamp(2, convertLDTToTimestamp(dateTime.plusDays(1)));
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                // Create a map for each appointment's details
+                Map<String, String> appointmentDetails = new HashMap<>();
+
+                // Store each field separately for easier access and display
+                appointmentDetails.put("patientID", String.valueOf(resultSet.getInt("PatientID")));
+                appointmentDetails.put("doctorID", String.valueOf(resultSet.getInt("DoctorID")));
+                appointmentDetails.put("specialization", resultSet.getString("Specialization"));
+                appointmentDetails.put("time", getTimeFromLDT(resultSet.getTimestamp("AppointmentTime").toLocalDateTime()));
+                appointmentDetails.put("date", getDateFromLDT(resultSet.getTimestamp("AppointmentTime").toLocalDateTime()));
+                appointmentDetails.put("reason", resultSet.getString("Reason"));
+
+                futureAppointments.add(appointmentDetails);
+            }
+        } catch (SQLException sqle) {
+            System.err.println(sqle.getLocalizedMessage());
+        }
+        return futureAppointments;
     }
 }

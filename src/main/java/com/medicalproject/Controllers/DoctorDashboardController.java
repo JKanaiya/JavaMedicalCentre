@@ -49,7 +49,11 @@ public class DoctorDashboardController implements Initializable {
 
     @FXML
     private Label timeNow;
-
+    /**
+     * Initialize method that sets up the dashboard.
+     * Loads the initial content (AppointmentView) and sets up a timeline
+     * to update the time label every minute.
+     */
     public void initialize(URL url, ResourceBundle rb) {
         loadFXML("AppointmentView.fxml");
         Timeline timeline = new Timeline(
@@ -60,11 +64,18 @@ public class DoctorDashboardController implements Initializable {
         timeNow.setText(getTimeFromLDT(LocalDateTime.now()));
         dateNow.setText(getDateFromLDT(LocalDateTime.now()));
     }
-
+    /**
+     * Updates the time displayed on the UI to the current time.
+     */
     private void updateTime() {
         timeNow.setText(getTimeFromLDT(LocalDateTime.now()));
     }
-
+    /**
+     * Opens the Bill generation view when the generate bill button is clicked.
+     *
+     * @param event The action event triggered by the button click.
+     * @throws IOException If an error occurs while loading the FXML file.
+     */
     @FXML
     private void generateBill(ActionEvent event) throws IOException {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/Bills.fxml")));
@@ -75,23 +86,41 @@ public class DoctorDashboardController implements Initializable {
             stage.centerOnScreen();
             stage.show();
     }
-
+    /**
+     * Logs out the user by closing the current window.
+     *
+     * @param event The action event triggered by the button click.
+     */
     @FXML
     private void logOut(ActionEvent event) {
         Stage stage = (Stage) LogOut.getScene().getWindow();
         stage.close();
     }
-
+    /**
+     * Opens the Appointment view when the appointments button is clicked.
+     *
+     * @param event The action event triggered by the button click.
+     * @throws IOException If an error occurs while loading the FXML file.
+     */
     @FXML
     private void viewAppointments(ActionEvent event) throws IOException {
         loadFXML("AppointmentView.fxml");
     }
-
+    /**
+     * Opens the Search view when the search button is clicked.
+     *
+     * @param event The action event triggered by the button click.
+     */
     @FXML
     private void viewSearch(ActionEvent event) {
         loadFXML("Search.fxml");
     }
-
+    /**
+     * Loads the FXML file into the content area of the dashboard.
+     * It clears the previous content and adds the new view.
+     *
+     * @param fxmlFile The name of the FXML file to load.
+     */
     private void loadFXML(String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxmlFile));

@@ -36,12 +36,6 @@ public class GADoctorsController {
     @FXML
     private TextField timeSelected;
 //
-//        for (Map.Entry<Integer, String> entry : temps.entrySet()) {
-//        if (entry.getValue().equals(availableDoctors.)) {
-//            foundKey = entry.getKey();
-//            break;
-//        }
-//    }
 
     @FXML
     private void checkSpecializationAvailability(ActionEvent event) throws IOException {

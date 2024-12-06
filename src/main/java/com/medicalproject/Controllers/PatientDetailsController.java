@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 import static com.medicalproject.DB.DBCRUD.*;
-import static com.medicalproject.TimeControl.convertToLocalDateTime;
 
 public class PatientDetailsController {
 

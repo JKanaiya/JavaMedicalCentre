@@ -9,5 +9,8 @@
         <module name="MedicalCentre" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Bills" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

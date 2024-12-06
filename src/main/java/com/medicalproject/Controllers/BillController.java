@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
@@ -48,7 +50,7 @@ public class BillController implements Initializable {
 
     @FXML
     private Button removeButton;
-
+    // Observable lists to manage procedures in the available and selected lists
     private ObservableList<Map.Entry<String, Integer>> availableItems;
     private ObservableList<Map.Entry<String, Integer>> selectedItems;
 
@@ -72,19 +74,20 @@ public class BillController implements Initializable {
         billDate.setText(LocalDate.now().toString());
         billID.setText(getNewID("Bills", "BillID"));
     }
-
+    // Method to add a procedure from the available list to the selected list
     public void addButton(ActionEvent e){
         moveItem(availableListView, availableItems, selectedItems);
     }
-
+    // Method to remove a procedure from the selected list back to the available list
     public void removeButton(ActionEvent e){
         moveItem(selectedListView, selectedItems, availableItems);
     }
-
+    // Method to cancel the bill generation and close the window
     public void cancelBillGeneration (ActionEvent ae){
         Stage stage = (Stage) CancelBillGen.getScene().getWindow();
         stage.close();
     }
+    // Method to calculate the total cost of selected procedures
     private int billTotal(){
         int totalCost = 0;
         if (selectedItems != null && !selectedItems.isEmpty()){
@@ -94,18 +97,19 @@ public class BillController implements Initializable {
         }
         return totalCost;
     }
-    public void completeBill(){
+    // Method to complete the bill generation
+    public void completeBill() throws IOException {
         Map<String, Integer> selectedProcedures  = new HashMap<>();
         for (Map.Entry<String, Integer> entry : selectedItems) {
             selectedProcedures.put(entry.getKey(),entry.getValue() );
         }
         addBill(Integer.parseInt(billID.getText()), Integer.parseInt(billPatientID.getText()), BigDecimal.valueOf(billTotal()) , LocalDateTime.now(), false);
-//        replace with file printing later
-        System.out.println(generateBill(Integer.parseInt(billID.getText()), Integer.parseInt(billPatientID.getText()), selectedProcedures , LocalDate.now(), billTotal()));
+
+        generateBill(Integer.parseInt(billID.getText()), Integer.parseInt(billPatientID.getText()), selectedProcedures , LocalDate.now(), billTotal());
         Stage stage = (Stage) billComplete.getScene().getWindow();
         stage.close();
     }
-
+    // Method to move a selected item between two ListViews (source and target)
     private void moveItem(
             ListView<Map.Entry<String, Integer>> sourceList,
             ObservableList<Map.Entry<String, Integer>> sourceItems,
@@ -116,7 +120,7 @@ public class BillController implements Initializable {
             sourceItems.remove(selectedItem);
         }
     }
-
+    // Method to set up the cell factory for formatting the ListView entries
     private void setCellFactory(ListView<Map.Entry<String, Integer>> listView) {
         listView.setCellFactory(param -> new ListCell<Map.Entry<String, Integer>>() {
             @Override
