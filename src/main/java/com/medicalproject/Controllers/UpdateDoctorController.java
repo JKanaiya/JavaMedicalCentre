@@ -1,11 +1,17 @@
 package com.medicalproject.Controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.math.BigInteger;
+
+import static com.medicalproject.DB.DBCRUD.updateDoctor;
+import static com.medicalproject.DB.DBCRUD.updatePatientDB;
 
 public class UpdateDoctorController {
 
@@ -20,7 +26,6 @@ public class UpdateDoctorController {
 
     @FXML
     private Label doctorName;
-
     @FXML
     private TextField updateDoctorEmail;
 
@@ -36,5 +41,20 @@ public class UpdateDoctorController {
         updateDoctorPhoneNo.setText(String.valueOf(phoneNo));
         updateDoctorSpec.setText(specialization);
         updateDoctorEmail.setText(email);
+    }
+    @FXML
+    public void confirmUpdate(ActionEvent event){
+        updateDoctor(Integer.parseInt(doctorID.getText()),
+                updateDoctorSpec.getText(), Integer.parseInt(updateDoctorPhoneNo.getText()),updateDoctorEmail.getText());
+
+        closeWindow((Node) event.getSource());
+    }
+    public void closeWindow(Node node) {
+        Stage stage = (Stage) node.getScene().getWindow();
+        stage.close();
+    }
+    @FXML
+    private void cancelUpdate(ActionEvent event){
+        closeWindow((Node) event.getSource());
     }
 }

@@ -10,7 +10,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="538.0" prefWidth="202.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.medicalproject.Controllers.AdminDashboardController">
+<AnchorPane prefHeight="538.0" prefWidth="202.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.medicalproject.Controllers.StaffDashboardController">
    <children>
       <VBox maxWidth="1.7976931348623157E308" prefHeight="538.0" prefWidth="214.0" spacing="20.0" style="-fx-border-radius: 10px; -fx-background-color: #8a8686; -fx-padding: 35;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -55,12 +55,9 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Button>
-            <VBox alignment="CENTER" prefHeight="154.0" prefWidth="144.0" spacing="10.0">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#addPatient" style="-fx-background-color: #00d9b5;" text="Register Patient" textFill="WHITE" />
-                  <Button mnemonicParsing="false" onAction="#addDoctor" style="-fx-background-color: #0A3200;" text="Register Doctor" textFill="WHITE" />
-                  <Button mnemonicParsing="false" onAction="#addAdmin" style="-fx-background-color: #4F646F;" text="Register Admin" textFill="WHITE" />
-                  <Button mnemonicParsing="false" onAction="#addStaff" style="-fx-background-color: #B7ADCF;" text="Register Staff" textFill="WHITE" />
+                  <Button mnemonicParsing="false" onAction="#registerPatient" style="-fx-background-color: #00d9b5;" text="New Patient" textFill="WHITE" />
                </children>
             </VBox>
             <Button fx:id="LogOut" mnemonicParsing="false" onAction="#logOut" prefHeight="59.0" prefWidth="192.0" style="-fx-background-color: #4444; -fx-border-radius: 10;" text="Log Out" textFill="#b9b9b9">

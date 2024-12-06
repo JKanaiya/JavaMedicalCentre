@@ -101,12 +101,12 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
                <children>
-                  <Button fx:id="cancelBtn" mnemonicParsing="false" prefHeight="56.0" prefWidth="97.0" style="-fx-background-color: #d83131;" text="Cancel" textFill="#eeeeee">
+                  <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelUpdate" prefHeight="56.0" prefWidth="97.0" style="-fx-background-color: #d83131;" text="Cancel" textFill="#eeeeee">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button fx:id="confirmUpdate" mnemonicParsing="false" prefHeight="56.0" prefWidth="97.0" style="-fx-background-color: #009844;" text="Confirm" textFill="#eeeeee">
+                  <Button fx:id="confirmUpdate" mnemonicParsing="false" onAction="#confirmUpdate" prefHeight="56.0" prefWidth="97.0" style="-fx-background-color: #009844;" text="Confirm" textFill="#eeeeee">
                      <font>
                         <Font size="15.0" />
                      </font>

@@ -2,9 +2,11 @@ package com.medicalproject.Controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import static com.medicalproject.DB.DBCRUD.updatePatientDB;
 
@@ -41,8 +43,8 @@ public class UpdatePatientController {
     private TextField patientWeight;
 
     @FXML
-    void cancelUpdate(ActionEvent event) {
-
+    private void cancelUpdate(ActionEvent event) {
+        closeWindow((Node) event.getSource());
     }
 
     @FXML
@@ -60,9 +62,15 @@ public class UpdatePatientController {
         patientAge.setText(String.valueOf(age));
         patientBloodGroup.setText(bloodGroup);
     }
-    public void confirmUpdate(){
+    @FXML
+    public void confirmUpdate(ActionEvent event){
         updatePatientDB(Integer.parseInt(patientID.getText()),
                 patientAddress.getText(), Integer.parseInt(patientAge.getText()), patientBloodGroup.getText(),
                 Double.parseDouble(patientWeight.getText()), Double.parseDouble(patientHeight.getText()));
+        closeWindow((Node) event.getSource());
+    }
+    public void closeWindow(Node node) {
+        Stage stage = (Stage) node.getScene().getWindow();
+        stage.close();
     }
 }

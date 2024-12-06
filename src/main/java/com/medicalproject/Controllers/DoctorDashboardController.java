@@ -101,7 +101,7 @@ public class DoctorDashboardController implements Initializable {
                 Region region = (Region) view;
                 // Allow the view to grow as large as possible
                 region.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                // Remove any minimum size constraints
+                // Remove any minimum size constraint
                 region.setMinSize(0, 0);
                 // Let the parent (StackPane) determine the size
                 region.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);

@@ -6,14 +6,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.medicalproject.TimeControl.convertToLocalDateTime;
@@ -37,12 +35,34 @@ public class GADoctorsController {
 
     @FXML
     private TextField timeSelected;
+//
+//        for (Map.Entry<Integer, String> entry : temps.entrySet()) {
+//        if (entry.getValue().equals(availableDoctors.)) {
+//            foundKey = entry.getKey();
+//            break;
+//        }
+//    }
 
     @FXML
     private void checkSpecializationAvailability(ActionEvent event) throws IOException {
-        if (!DBCRUD.getSpecializedMap(specializationSelected.getText(), convertToLocalDateTime(timeSelected.getText(), dateSelected.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))).isEmpty()) {
+        String dateFormat = dateSelected.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        Map<Integer, String> tempHold = DBCRUD.getSpecializedMap(specializationSelected.getText(), convertToLocalDateTime(timeSelected.getText(), dateFormat));
+        if (!tempHold.isEmpty()) {
+
             closeWindow((Node) event.getSource());
-            loadAppointmentForm();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AppointmentForm.fxml"));
+            Parent root = loader.load();
+            AppointmentFormController apc = loader.getController();
+            apc.setDateTime(dateFormat, timeSelected.getText());
+            apc.populateDoctorList(tempHold, specializationSelected.getText());
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            // Center the window on the screen
+            stage.centerOnScreen();
+            stage.show();
         } else {
             errorMessageLabel.setText("Sorry, No Doctors in that field are available at that time");
         }
@@ -61,7 +81,7 @@ public class GADoctorsController {
     }
 
     @FXML
-    private void closeWindow(Node node) {
+    public void closeWindow(Node node) {
         Stage stage = (Stage) node.getScene().getWindow();
         stage.close();
     }

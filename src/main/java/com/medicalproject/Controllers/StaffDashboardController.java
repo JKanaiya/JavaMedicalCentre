@@ -24,12 +24,10 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import static com.medicalproject.DB.DBCRUD.getNewID;
-import static com.medicalproject.DB.DBCRUD.registerDoctor;
 import static com.medicalproject.TimeControl.getDateFromLDT;
 import static com.medicalproject.TimeControl.getTimeFromLDT;
 
-public class AdminDashboardController implements Initializable {
+public class StaffDashboardController implements Initializable {
 
     @FXML
     private Label dateNow;
@@ -39,9 +37,6 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private Button navAppointments;
-
-    @FXML
-    private Button manageUsersBtn;
 
     @FXML
     private StackPane contentArea;
@@ -71,6 +66,17 @@ public class AdminDashboardController implements Initializable {
     }
 
     @FXML
+    private void registerPatient() throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/RegisterPatient.fxml")));
+        Stage stage = new Stage();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        // Center the window on the screen
+        stage.centerOnScreen();
+        stage.show();
+    }
+
+    @FXML
     private void generateBill(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/Bills.fxml")));
         Stage stage = new Stage();
@@ -94,48 +100,9 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void viewSearch(ActionEvent event) {
-        loadFXML("adminSearch.fxml");
+        loadFXML("Search.fxml");
     }
-    @FXML
-    private void addStaff() throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/RegisterStaff.fxml")));
-        Stage stage = new Stage();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        // Center the window on the screen
-        stage.centerOnScreen();
-        stage.show();
-    }
-    @FXML
-    private void addAdmin() throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/RegisterAdmin.fxml")));
-        Stage stage = new Stage();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        // Center the window on the screen
-        stage.centerOnScreen();
-        stage.show();
-    }
-    @FXML
-    private void addPatient() throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/RegisterPatient.fxml")));
-        Stage stage = new Stage();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        // Center the window on the screen
-        stage.centerOnScreen();
-        stage.show();
-    }
-    @FXML
-    private void addDoctor() throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/RegisterDoctor.fxml")));
-        Stage stage = new Stage();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        // Center the window on the screen
-        stage.centerOnScreen();
-        stage.show();
-    }
+
     private void loadFXML(String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxmlFile));
@@ -145,7 +112,7 @@ public class AdminDashboardController implements Initializable {
                 Region region = (Region) view;
                 // Allow the view to grow as large as possible
                 region.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                // Remove any minimum size constraints
+                // Remove any minimum size constraint
                 region.setMinSize(0, 0);
                 // Let the parent (StackPane) determine the size
                 region.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);

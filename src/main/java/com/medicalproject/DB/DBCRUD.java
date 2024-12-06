@@ -4,13 +4,11 @@ import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.SimpleFormatter;
 
 import static com.medicalproject.Controllers.LoginController.getRole;
 import static com.medicalproject.Controllers.LoginController.setRole;
@@ -32,7 +30,7 @@ public class DBCRUD {
     public static Map<Integer, String> getSpecializedMap(String Specialization, LocalDateTime dateTime){
         Map<Integer, String> idName = new HashMap<>(); // Initialize the map to hold the ID and Name of the Doctors to return
 //         Declare String with Parameters for PreparedStatement.
-        String sqlPS = "SELECT DoctorID, Name FROM Doctors WHERE Specialization = ? AND DoctorID NOT IN (" +
+        String sqlPS = "SELECT DoctorID, Name FROM Doctors WHERE Specialization Like ? AND DoctorID NOT IN (" +
                 "SELECT DoctorID FROM Appointments WHERE Specialization = ? AND AppointmentTime BETWEEN ? AND ?)";
 //         Use a try...with resources to :
 //         1. get a Connection from the dataSource
@@ -80,7 +78,8 @@ public class DBCRUD {
 //            warn the user that there was an error and to try again
         }
     }
-    public static void registerUser(int ID, String password, String role){
+    public static int registerUser(int ID, String password, String role){
+        int insertCount = 0;
         String sqlPS = "INSERT into USERS(ID, Password, Role) VALUES (? , ? , ?)";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sqlPS)) {
@@ -89,7 +88,7 @@ public class DBCRUD {
             ps.setString(2, password);
             ps.setString(3, role);
 
-            int insertCount = ps.executeUpdate();
+             insertCount = ps.executeUpdate();
             // add a trigger here to show a success or failure if the execution was successful
             if(insertCount == 1 ){
                 System.out.println("Successful Registration of User into Users Table");
@@ -97,12 +96,15 @@ public class DBCRUD {
         }
         catch (SQLException sqle){
             sqle.printStackTrace();
+            insertCount = 0;
         }
+        return insertCount;
     }
-    public static void registerDoctor(int ID, String password, String Specialization, String Name, int PhoneNumber, String Email){
+    public static int registerDoctor(int ID, String password, String Specialization, String Name, int PhoneNumber, String Email){
+        int insertCount = 0;
         String role = "Doctor";
         registerUser(ID, password, role);
-        String sqlPS = "INSERT into DOCTORS(ID, Name, Specialization, PhoneNo, Email) VALUES (?,?,?,?,?)";
+        String sqlPS = "INSERT into DOCTORS(DoctorID, Name, Specialization, PhoneNo, Email) VALUES (?,?,?,?,?)";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sqlPS)){
 
@@ -112,42 +114,52 @@ public class DBCRUD {
             ps.setInt(4, PhoneNumber);
             ps.setString(5, Email);
 
-            int insertCount = ps.executeUpdate();
+            insertCount = ps.executeUpdate();
 
             System.out.println(insertCount);
         }
         catch (SQLException sqle){
             sqle.printStackTrace();
         }
+        return insertCount;
     }
-    public static void registerStaff(int StaffID, String password, String Name, int PhoneNumber, String Email){
+    public static int registerStaff(int StaffID, String password){
         String role = "Staff";
-        registerUser(StaffID, password, role);
-        if(getRole().equals("Admin")){
-            String sqlPS = "INSERT INTO STAFF(StaffID, Name, PhoneNumber, Email) VALUES ( ?,?,?,? )";
-            try (Connection conn = dataSource.getConnection();
-                 PreparedStatement ps = conn.prepareStatement(sqlPS)) {
-
-                ps.setInt(1, StaffID);
-                ps.setString(2, Name);
-                ps.setInt(3, PhoneNumber);
-                ps.setString(4, Email);
-
-                int insertCount = ps.executeUpdate();
-
-                if(insertCount == 1){
-                    System.out.println("Successful Removal of STAFF from STAFF Table");
-                }
-            }
-            catch (SQLException sqle) {
-                sqle.printStackTrace();
-            }
+        if(registerUser(StaffID, password, role) == 1){
+            return 1;
+        }
+        else{
+            return 0;
         }
     }
-    public static void registerAdmin(int ID, String password){
+    public static int registerAdmin(int ID, String password){
         String role = "Admin";
-        registerUser(ID, password, role);
-//        optionally add more details to the admin ( Phone number, email )
+        return registerUser(ID, password, role);
+    }
+    public static int  registerPatientDB(String name, String address, String gender, int age, String bloodgroup, Double weight, Double height){
+        int insertCount = 0;
+        String sqlPS = "INSERT into Patients(PatientID, Name, Address, Gender , Age, BloodGroup, Weight, Height) VALUES (?,?,?,?,?,?,?,?)";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)){
+
+            ps.setInt(1,Integer.parseInt(getNewID("Patients", "PatientID")));
+            ps.setString(2, name);
+            ps.setString(3, address);
+            ps.setString(4, gender);
+            ps.setInt(5,age);
+            ps.setString(6, bloodgroup);
+            ps.setDouble(7, weight);
+            ps.setDouble(8, height);
+
+            insertCount = ps.executeUpdate();
+
+            System.out.println(insertCount);
+        }
+        catch (SQLException sqle){
+            sqle.printStackTrace();
+            insertCount = 0;
+        }
+        return insertCount;
     }
     public static void removeData(int ID, String Table, String Column){
         String sqlPS = "DELETE from " + Table + " WHERE " + Column + " = ?";
@@ -240,9 +252,10 @@ public class DBCRUD {
             sqle.printStackTrace();
         }
     }
-    public static void updateDoctor(int DoctorID, String Specialization, int PhoneNumber,  String Email){
+    public static int updateDoctor(int DoctorID, String Specialization, int PhoneNumber,  String Email){
+        int insertCount = 0;
         if(getRole().equals("Admin")){
-            String sqlPS = "UPDATE Doctors SET Specialization = ?, PhoneNumber = ?, Email = ? WHERE DoctorID = ?";
+            String sqlPS = "UPDATE Doctors SET Specialization = ?, PhoneNo = ?, Email = ? WHERE DoctorID = ?";
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement(sqlPS)) {
 
@@ -251,39 +264,17 @@ public class DBCRUD {
                 ps.setString(3, Email);
                 ps.setInt(4, DoctorID);
 
-                int insertCount = ps.executeUpdate();
-
-                if(insertCount == 1){
-                    System.out.println("Successful Update of Doctors from Doctors Table");
-                }
+                insertCount = ps.executeUpdate();
             }
             catch (SQLException sqle) {
                 sqle.printStackTrace();
+                insertCount = 0;
             }
         }
+        return insertCount;
     }
-    public static void updateStaff(int StaffID, int PhoneNumber, String Email){
-        if(getRole().equals("Admin")){
-            String sqlPS = "UPDATE Staff SET PhoneNumber = ?, Email = ? WHERE StaffID = ?";
-            try (Connection conn = dataSource.getConnection();
-                 PreparedStatement ps = conn.prepareStatement(sqlPS)) {
-
-                ps.setInt(1, PhoneNumber);
-                ps.setString(2, Email);
-                ps.setInt(3, StaffID);
-
-                int insertCount = ps.executeUpdate();
-
-                if(insertCount == 1){
-                    System.out.println("Successful Update of Staff from Staff Table");
-                }
-            }
-            catch (SQLException sqle) {
-                sqle.printStackTrace();
-            }
-        }
-    }
-    public static void updatePatientDB(int PatientID, String Address, int Age,  String BloodGroup, Double Weight, Double Height){
+    public static int updatePatientDB(int PatientID, String Address, int Age,  String BloodGroup, Double Weight, Double Height){
+        int insertCount = 0;
         if(getRole().equals("Admin")){
             String sqlPS = "UPDATE Patients SET Address = ?, Age = ?, BloodGroup = ? , Weight = ? , Height = ? WHERE PatientID = ?";
             try (Connection conn = dataSource.getConnection();
@@ -296,16 +287,13 @@ public class DBCRUD {
                 ps.setDouble(5, Height);
                 ps.setInt(6, PatientID);
 
-                int insertCount = ps.executeUpdate();
-
-                if(insertCount == 1){
-                    System.out.println("Successful Update of Patient from Patients Table");
-                }
+                insertCount = ps.executeUpdate();
             }
             catch (SQLException sqle) {
                 sqle.printStackTrace();
             }
         }
+        return insertCount;
     }
     public static void addAppointment(int PatientID, int DoctorID, String reason, LocalDateTime dateTime, String Specialization){
         Timestamp convertedTimestamp = convertLDTToTimestamp(dateTime);
@@ -342,18 +330,22 @@ public class DBCRUD {
             System.err.println(sqle.getLocalizedMessage());
         }
     }
-    public static void updateBillPaidState(int BillID, Boolean BillPaid, String ModeOfPayment){
+    public static int updateBillPaidState(int BillID, Boolean BillPaid, String ModeOfPayment){
         String sqlPS = "UPDATE Bills SET BillPaid = ? , ModeOfPayment = ? WHERE BillID = ? ";
+        int insertCount = 0;
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sqlPS)) {
-            ps.setInt(1, BillID);
-            ps.setBoolean(2, BillPaid);
-            ps.setString(3, ModeOfPayment);
+            ps.setBoolean(1, BillPaid);
+            ps.setString(2, ModeOfPayment);
+            ps.setInt(3, BillID);
+             insertCount = ps.executeUpdate();
         }
         catch (SQLException sqle){
             System.err.println(sqle.getLocalizedMessage());
+            insertCount = 0;
 
         }
+        return insertCount;
     }
     public static String getNameDB(String table, int ID, String column){
         String name = "";

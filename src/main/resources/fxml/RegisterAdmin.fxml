@@ -10,68 +10,77 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #404040;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.medicalproject.Controllers.RegisterAdminController">
    <children>
-      <VBox layoutX="7.0" layoutY="8.0" prefHeight="47.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox prefHeight="47.0" prefWidth="63.0" style="-fx-padding: 15;">
+            <VBox prefHeight="47.0" prefWidth="600.0">
                <children>
-                  <Label text="Ph." textFill="#d83131">
+                  <HBox prefHeight="47.0" prefWidth="63.0" style="-fx-padding: 15;">
+                     <children>
+                        <Label text="Ph." textFill="#d83131">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="TOP_LEFT" text="Medical" textFill="WHITE">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="22.0" prefWidth="600.0" text="Register Admin" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER" prefHeight="60.0" prefWidth="600.0" spacing="10.0">
+               <children>
+                  <Label text="ID:" textFill="WHITE">
                      <font>
-                        <Font size="16.0" />
+                        <Font size="15.0" />
                      </font>
                   </Label>
-                  <Label alignment="TOP_LEFT" text="Medical" textFill="WHITE">
+                  <Label fx:id="genAdminID" prefHeight="22.0" prefWidth="69.0" textFill="#00d9b5">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
                </children>
             </HBox>
-         </children>
-      </VBox>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="212.0" layoutY="52.0" prefHeight="22.0" prefWidth="600.0" text="Register Admin" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <HBox alignment="CENTER" layoutY="100.0" prefHeight="60.0" prefWidth="600.0" spacing="10.0">
-         <children>
-            <Label text="ID:" textFill="WHITE">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label fx:id="genAdminID" prefHeight="22.0" prefWidth="69.0" textFill="#00d9b5">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-         </children>
-      </HBox>
-      <HBox alignment="CENTER" layoutX="8.0" layoutY="160.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-         <children>
-            <HBox prefHeight="100.0" prefWidth="230.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
+                  <HBox prefHeight="100.0" prefWidth="230.0">
+                     <children>
+                        <VBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="234.0" style="-fx-padding: 20;">
+                           <children>
+                              <Label text="Password:" textFill="WHITE" />
+                              <PasswordField fx:id="adminPassword" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
                   <VBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="234.0" style="-fx-padding: 20;">
                      <children>
-                        <Label text="Password:" textFill="WHITE" />
-                        <PasswordField fx:id="adminPassword" />
+                        <Label text="Confirm Password" textFill="WHITE" />
+                        <PasswordField fx:id="adminPasswordConfirm" />
                      </children>
                   </VBox>
                </children>
             </HBox>
-            <VBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="234.0" style="-fx-padding: 20;">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
                <children>
-                  <Label text="Confirm Password" textFill="WHITE" />
-                  <PasswordField fx:id="adminPasswordConfirm" />
+                  <Button fx:id="cancelRegBtn" mnemonicParsing="false" onAction="#cancelReg" prefHeight="48.0" prefWidth="97.0" style="-fx-background-color: #d83131;" text="Cancel" textFill="WHITE" />
+                  <Button fx:id="registerAdminBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addAdmin" prefHeight="48.0" prefWidth="97.0" style="-fx-background-color: #009844;" text="Register" textFill="WHITE" />
                </children>
-            </VBox>
+            </HBox>
+            <Label fx:id="invalidFormMessage" alignment="CENTER" prefHeight="48.0" prefWidth="600.0" textFill="#d83131">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
          </children>
-      </HBox>
-      <HBox alignment="CENTER" layoutY="260.0" prefHeight="100.0" prefWidth="200.0" spacing="100.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-         <children>
-            <Button fx:id="cancelRegBtn" mnemonicParsing="false" prefHeight="48.0" prefWidth="97.0" style="-fx-background-color: #d83131;" text="Cancel" textFill="WHITE" />
-            <Button fx:id="registerAdminBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="48.0" prefWidth="97.0" style="-fx-background-color: #009844;" text="Register" textFill="WHITE" />
-         </children>
-      </HBox>
+      </VBox>
    </children>
 </AnchorPane>

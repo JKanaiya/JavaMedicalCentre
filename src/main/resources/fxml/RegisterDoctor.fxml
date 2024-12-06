@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #404040;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.medicalproject.Controllers.RegisterDoctorController">
    <children>
       <VBox prefHeight="704.0" prefWidth="600.0">
@@ -42,7 +41,7 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <Label fx:id="genIDLocation" prefHeight="21.0" prefWidth="63.0" textFill="#00d9b5">
+                        <Label fx:id="genDoctorID" prefHeight="21.0" prefWidth="63.0" textFill="#00d9b5">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
@@ -94,7 +93,7 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="doctorSpecialization" />
+                        <TextField fx:id="doctorEmail" />
                      </children>
                   </VBox>
                </children>
@@ -125,12 +124,12 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
                <children>
-                  <Button fx:id="cancelRegistration" mnemonicParsing="false" prefHeight="53.0" prefWidth="121.0" style="-fx-background-color: #d83131;" text="Cancel" textFill="#fcfcfc">
+                  <Button mnemonicParsing="false" onAction="#cancelRegistration" prefHeight="53.0" prefWidth="121.0" style="-fx-background-color: #d83131;" text="Cancel" textFill="#fcfcfc">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Button>
-                  <Button fx:id="registerDoctorBtn" mnemonicParsing="false" prefHeight="53.0" prefWidth="121.0" style="-fx-background-color: #009844;" text="Register" textFill="#fcfcfc">
+                  <Button fx:id="registerDoctorBtn" mnemonicParsing="false" onAction="#addDoctor" prefHeight="53.0" prefWidth="121.0" style="-fx-background-color: #009844;" text="Register" textFill="#fcfcfc">
                      <font>
                         <Font size="16.0" />
                      </font>

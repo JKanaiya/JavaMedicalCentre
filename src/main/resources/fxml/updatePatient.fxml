@@ -138,7 +138,7 @@
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button fx:id="confirmUpdate" mnemonicParsing="false" onAction="#updatePatient" prefHeight="54.0" prefWidth="103.0" style="-fx-background-color: #009844;" text="Confirm" textFill="WHITE">
+                  <Button fx:id="confirmUpdate" mnemonicParsing="false" onAction="#confirmUpdate" prefHeight="54.0" prefWidth="103.0" style="-fx-background-color: #009844;" text="Confirm" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>

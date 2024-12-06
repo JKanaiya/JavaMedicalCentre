@@ -37,7 +37,7 @@
                         <VBox alignment="CENTER" prefHeight="217.0" prefWidth="147.0" spacing="40.0" HBox.hgrow="ALWAYS">
                             <children>
                                 <Button fx:id="viewDetailsBtn" mnemonicParsing="false" onAction="#viewDetails" prefHeight="34.0" prefWidth="92.0" style="-fx-background-color: #E8871E;" text="View Details" textFill="WHITE" />
-                                <Button fx:id="updateDetailsBtn" mnemonicParsing="false" prefHeight="34.0" prefWidth="92.0" style="-fx-background-color: #9191E9;" text="Update" textFill="WHITE" />
+                                <Button fx:id="updateDetailsBtn" mnemonicParsing="false" onAction="#loadDetailsForUpdate" prefHeight="34.0" prefWidth="92.0" style="-fx-background-color: #9191E9;" text="Update" textFill="WHITE" />
                         <Button fx:id="deleteUserBtn" mnemonicParsing="false" onAction="#deleteData" prefHeight="34.0" prefWidth="92.0" style="-fx-background-color: #d83131;" text="Delete" textFill="WHITE" />
                             </children>
                         </VBox>
