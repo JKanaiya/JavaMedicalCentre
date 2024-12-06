@@ -38,12 +38,14 @@ public class AppointmentFormController {
     String spec = "";
     Map<Integer, String> temps = new HashMap<>();
     @FXML
+    // Populates the availableDoctors list with doctors and sets specialization
     public void populateDoctorList(Map<Integer, String> tempHold, String specialization){
         temps = tempHold;
         temps.forEach((key, value) -> availableDoctors.getItems().add(String.valueOf(new MapEntry(key, value))));
         spec = specialization;
     }
     @FXML
+    // Confirms the addition of the appointment by extracting data from the form and calling the database method
     private void confirmAddAppointment(ActionEvent event) {
         // Getting the selected item
         String selected = availableDoctors.getValue();
@@ -55,8 +57,10 @@ public class AppointmentFormController {
                 break;
             }
         }
+        // Calls the method to add the appointment to the database
         addAppointment(Integer.parseInt(patientID.getText()), foundKey,
                 appointmentDescription.getText(), convertToLocalDateTime(appointmentTime.getText(), appointmentDate.getText()), spec);
+        // Closes the appointment window after the confirmation
         closeWindow((Node) event.getSource());
     }
     public void setDateTime(String date, String time){
@@ -64,6 +68,7 @@ public class AppointmentFormController {
         appointmentTime.setText(time);
     }
     @FXML
+    // Cancels the appointment creation and closes the window
     private void cancelAppCreateBtn(ActionEvent event){
         closeWindow((Node) event.getSource());
     }

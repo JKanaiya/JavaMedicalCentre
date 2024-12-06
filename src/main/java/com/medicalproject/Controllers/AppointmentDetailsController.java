@@ -25,7 +25,7 @@ private Label doctorID;
 
 @FXML
 private Label patientID;
-
+    // Method to set the appointment details in the corresponding labels
     public void setAppointmentDetails(String reason, String specialization, int docID, int patID, String date, String time){
         patientID.setText(String.valueOf(patID));
         doctorID.setText(String.valueOf(docID));
@@ -35,6 +35,7 @@ private Label patientID;
         appReason.setText(reason);
     }
     public void deleteAppointment(int patientID, String date, String time){
+        // Convert the date and time to a LocalDateTime object and pass it to the deleteAppointmentDB method
         deleteAppointmentDB(patientID, convertToLocalDateTime(time, date));
     }
 }

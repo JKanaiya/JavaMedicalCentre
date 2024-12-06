@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 import java.math.BigInteger;
 
 import static com.medicalproject.DB.DBCRUD.updateDoctor;
-import static com.medicalproject.DB.DBCRUD.updatePatientDB;
 
 public class UpdateDoctorController {
 
