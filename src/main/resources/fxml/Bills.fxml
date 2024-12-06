@@ -59,7 +59,7 @@
       <Button fx:id="CancelBillGen" layoutX="70.0" layoutY="576.0" mnemonicParsing="false" onAction="#cancelBillGeneration" prefHeight="38.0" prefWidth="124.0" style="-fx-background-color: #D83131;" text="Cancel" textFill="WHITE" />
       <HBox layoutX="34.0" layoutY="244.0" prefHeight="221.0" prefWidth="576.0" style="-fx-padding: 10; -fx-spacing: 10;">
          <children>
-            <ListView fx:id="availableListView" prefHeight="201.0" prefWidth="288.0" style="-fx-padding: 10;" />
+            <ListView fx:id="availableListView" fixedCellSize="30.0" prefHeight="201.0" prefWidth="288.0" style="-fx-padding: 10;" />
             <ListView fx:id="selectedListView" nodeOrientation="LEFT_TO_RIGHT" prefHeight="201.0" prefWidth="262.0" style="-fx-padding: 10;" />
          </children>
       </HBox>

@@ -8,24 +8,21 @@ import java.time.format.DateTimeFormatter;
 
 public class TimeControl {
 
-    public LocalDateTime convertSimpleToLocalDateTime(String time, String date) {
-
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        // Parse date and time inputs
-        LocalTime formatTime = LocalTime.parse(time, timeFormatter);
-        LocalDate formatDate = LocalDate.parse(date, dateFormatter);
-
-        // Combine LocalDate and LocalTime into LocalDateTime
-        return  LocalDateTime.of(formatDate, formatTime);
-    }
-
     public static LocalDateTime convertToLocalDateTime(String time, String date){
         LocalTime formatTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
         LocalDate formatDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         // Combine LocalDate and LocalTime into LocalDateTime
         return LocalDateTime.of(formatDate, formatTime);
+    }
+
+    public static String getTimeFromLDT(LocalDateTime ldt){
+        DateTimeFormatter timeFormat  = DateTimeFormatter.ofPattern("HH:mm");
+        return timeFormat.format(ldt);
+    }
+
+    public static String getDateFromLDT(LocalDateTime ldt){
+        DateTimeFormatter dateFormat  = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return dateFormat.format(ldt);
     }
 
     public static Timestamp convertLDTToTimestamp(LocalDateTime dateTime){

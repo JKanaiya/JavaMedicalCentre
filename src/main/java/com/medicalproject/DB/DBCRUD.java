@@ -4,13 +4,17 @@ import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.SimpleFormatter;
 
 import static com.medicalproject.Controllers.LoginController.getRole;
 import static com.medicalproject.Controllers.LoginController.setRole;
-import static com.medicalproject.TimeControl.convertLDTToTimestamp;
+import static com.medicalproject.TimeControl.*;
 
 /**
  *  Java Program to hold all the CRUD Database Interactions.
@@ -145,8 +149,26 @@ public class DBCRUD {
         registerUser(ID, password, role);
 //        optionally add more details to the admin ( Phone number, email )
     }
+    public static void removeData(int ID, String Table, String Column){
+        String sqlPS = "DELETE from " + Table + " WHERE " + Column + " = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+
+            ps.setInt(1, ID);
+
+            int insertCount = ps.executeUpdate();
+
+            if(insertCount == 1){
+//                replace with a prompt
+                System.out.println("Successful Deletion");
+            }
+        }
+        catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+    }
     public static void removeUser(int ID){
-        String sqlPS = "DELETE from USERS where ID = ? )";
+        String sqlPS = "DELETE from USERS where ID = ?";
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement(sqlPS)) {
 
@@ -163,7 +185,7 @@ public class DBCRUD {
             }
     }
     public static void removeDoctor(int ID){
-        String sqlPS = "DELETE from DOCTORS where ID = ? )";
+        String sqlPS = "DELETE from DOCTORS where DoctorID = ?";
         if(getRole().equals("Admin")){
             try (Connection conn = dataSource.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sqlPS)) {
@@ -201,6 +223,22 @@ public class DBCRUD {
             }
         }
         removeUser(ID);
+    }
+    public static void deleteAppointmentDB(int PatientID, LocalDateTime dateTime){
+        String sqlPS = "DELETE from Appointments where PatientID = ? AND AppointmentTime = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+            ps.setInt(1, PatientID);
+            ps.setTimestamp(2, convertLDTToTimestamp(dateTime));
+            int deleteCount = ps.executeUpdate();
+            if(deleteCount == 1){
+//                replace with prompt
+                System.out.println("success");
+            }
+        }
+        catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
     }
     public static void updateDoctor(int DoctorID, String Specialization, int PhoneNumber,  String Email){
         if(getRole().equals("Admin")){
@@ -245,7 +283,7 @@ public class DBCRUD {
             }
         }
     }
-    public static void updatePatient(int PatientID, String Address, int Age,  String BloodGroup, Double Weight, Double Height){
+    public static void updatePatientDB(int PatientID, String Address, int Age,  String BloodGroup, Double Weight, Double Height){
         if(getRole().equals("Admin")){
             String sqlPS = "UPDATE Patients SET Address = ?, Age = ?, BloodGroup = ? , Weight = ? , Height = ? WHERE PatientID = ?";
             try (Connection conn = dataSource.getConnection();
@@ -317,6 +355,23 @@ public class DBCRUD {
 
         }
     }
+    public static String getNameDB(String table, int ID, String column){
+        String name = "";
+        String sqlPS = "Select Name from " + table + " WHERE " +  column + " = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+            ps.setInt(1, ID);
+            ResultSet resSet = ps.executeQuery();
+            if(resSet.next()){
+              name =  resSet.getString("Name");
+            }
+        }
+        catch (SQLException sqle){
+            System.err.println(sqle.getLocalizedMessage());
+
+        }
+        return name;
+    }
     public static String getNewID(String table, String column){
         int newID = 0;
         String sqlPS = "SELECT MAX(  " + column + " ) from " + table;
@@ -336,12 +391,120 @@ public class DBCRUD {
         }
         return Integer.toString(newID + 1);
     }
+    public static List<Map<String, String>> searchDoctorDB(String Name){
+    List<Map<String, String>> matchedDoctors = new ArrayList<>();
+        String sqlPS = "Select * from Doctors WHERE Name LIKE ? Order by Name" ;    // Using List<Map> instead of Map to preserve all records even if names are duplicate
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+            ps.setString(1, "%" + Name + "%");
+             ResultSet resultSet = ps.executeQuery();
+             while(resultSet.next()){
+                 // Create a map for each doctor's details
+                 Map<String, String> doctorDetails = new HashMap<>();
 
+                 // Store each field separately for easier access and display
+                 doctorDetails.put("id", String.valueOf(resultSet.getInt("DoctorID")));
+                 doctorDetails.put("name", resultSet.getString("Name"));
+                 doctorDetails.put("specialization", resultSet.getString("Specialization"));
+                 doctorDetails.put("phoneNo", String.valueOf(resultSet.getLong("PhoneNo")));
+                 doctorDetails.put("email", resultSet.getString("Email"));
+
+                 matchedDoctors.add(doctorDetails);
+             }
+        } catch (SQLException sqle) {
+            System.err.println(sqle.getLocalizedMessage());
+        }
+        return matchedDoctors;
+    }
+    public static List<Map<String, String>> searchPatientDB(String Name) {
+        List<Map<String, String>> matchedPatients = new ArrayList<>();
+        String sqlPS = "Select * from Patients WHERE Name LIKE ? Order by Name";    // Using List<Map> instead of Map to preserve all records even if names are duplicate
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+            ps.setString(1, "%" + Name + "%");
+            ResultSet resultSet = ps.executeQuery();
+            while (resultSet.next()) {
+                // Create a map for each patient's details
+                Map<String, String> patientDetails = new HashMap<>();
+
+                // Store each field separately for easier access and display
+                patientDetails.put("id", String.valueOf(resultSet.getInt("PatientID")));
+                patientDetails.put("name", resultSet.getString("Name"));
+                patientDetails.put("address", resultSet.getString("Address"));
+                patientDetails.put("gender", resultSet.getString("Gender"));
+                patientDetails.put("age", String.valueOf(resultSet.getInt("Age")));
+                patientDetails.put("bloodgroup", resultSet.getString("BloodGroup"));
+                patientDetails.put("weight",String.valueOf(resultSet.getDouble("Weight")));
+                patientDetails.put("height",String.valueOf(resultSet.getDouble("Height")));
+
+                matchedPatients.add(patientDetails);
+            }
+        } catch (SQLException sqle) {
+            System.err.println(sqle.getLocalizedMessage());
+        }
+        return matchedPatients;
+    }
+    public static List<Map<String, String>> searchBillDB(int ID) {
+        List<Map<String, String>> matchedBills = new ArrayList<>();
+        String sqlPS = "Select * from Bills WHERE PatientID = ? OR BillID = ?";    // Using List<Map> instead of Map to preserve all records even if names are duplicate
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+            ps.setInt(1, ID);
+            ps.setInt(2, ID);
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                // Create a map for each appointment's details
+                Map<String, String> billDetails = new HashMap<>();
+
+                // Store each field separately for easier access and display
+                billDetails.put("patientID", String.valueOf(resultSet.getInt("PatientID")));
+                billDetails.put("billID", String.valueOf(resultSet.getInt("BillID")));
+                billDetails.put("amount", String.valueOf(resultSet.getBigDecimal("BillAmount")));
+                billDetails.put("date", getDateFromLDT(resultSet.getTimestamp("BillDate").toLocalDateTime()));
+                billDetails.put("modeOfPayment", resultSet.getString("ModeOfPayment"));
+                billDetails.put("paidState", String.valueOf(resultSet.getBoolean("BillPaid")));
+
+               matchedBills.add(billDetails);
+            }
+        } catch (SQLException sqle) {
+            System.err.println(sqle.getLocalizedMessage());
+        }
+        return matchedBills;
+    }
+    public static List<Map<String, String>> searchAppointmentDB(int ID) {
+        List<Map<String, String>> matchedAppointments = new ArrayList<>();
+        String sqlPS = "Select * from Appointments WHERE PatientID = ? OR DoctorID = ?";    // Using List<Map> instead of Map to preserve all records even if names are duplicate
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlPS)) {
+            ps.setInt(1, ID);
+            ps.setInt(2, ID);
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                // Create a map for each appointment's details
+                Map<String, String> appointmentDetails = new HashMap<>();
+
+                // Store each field separately for easier access and display
+                appointmentDetails.put("patientID", String.valueOf(resultSet.getInt("PatientID")));
+                appointmentDetails.put("doctorID", String.valueOf(resultSet.getInt("DoctorID")));
+                appointmentDetails.put("specialization", resultSet.getString("Specialization"));
+                appointmentDetails.put("time", getTimeFromLDT(resultSet.getTimestamp("AppointmentTime").toLocalDateTime()));
+                appointmentDetails.put("date", getDateFromLDT(resultSet.getTimestamp("AppointmentTime").toLocalDateTime()));
+                appointmentDetails.put("reason", resultSet.getString("Reason"));
+
+                matchedAppointments.add(appointmentDetails);
+            }
+        } catch (SQLException sqle) {
+            System.err.println(sqle.getLocalizedMessage());
+        }
+        return matchedAppointments;
+    }
     private static DataSource createDataSource(){
         HikariDataSource ds = new HikariDataSource();
         ds.setJdbcUrl("jdbc:sqlserver://localhost:1433;databaseName=MedicalJavaDb");
         ds.setUsername("sa");
-        ds.setPassword("");
+        ds.setPassword("31F0rtkn0cks12");
         ds.addDataSourceProperty("trustServerCertificate", "true");
         ds.addDataSourceProperty("encrypt", "true");
         return ds;

@@ -1,27 +1,15 @@
 package com.medicalproject;
 /**
  *
- * @author robert
+ * @author robert + jonathan
  */
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class Bills {
-        private final int billId;
-        private final LocalDateTime billDate;
-        private final double billTotal;
-        private final String patientName;
-        private final String modeOfPayment;
+import static com.medicalproject.DB.DBCRUD.getNameDB;
 
-        public Bills(int billId, String patientName, LocalDateTime billDate, double billTotal, String patientName1, String modeOfPayment, List<String> procedures) {
-            this.billId = billId;
-            this.billDate = billDate;
-            this.billTotal = billTotal;
-            this.patientName = patientName;
-            this.modeOfPayment = modeOfPayment;
-        }
+public class Bills {
        public static Map<String, Integer> procedures = new HashMap<String, Integer>();
         static {
             procedures.put("Basic Physical Exam", 150);
@@ -39,19 +27,32 @@ public class Bills {
             procedures.put("Flu Test", 100);
             procedures.put("Allergy Testing", 300);
         }
-        @Override
-        public String toString() {
-            StringBuilder proceduresList = new StringBuilder();
-            procedures.get("Strep Test");
 
-            return "Ph.Medial--------------------------------------------\n" +
-                    "Bill ID           : " + billId + "\n" +
-                    patientName + "-----------------------------" + billDate + "\n" +
-                    "----------------------------------------------------------"+ "\n" +
-                    "Procedures        :\n" + proceduresList +
-                    "----------------------------------------------------------"+ "\n" +
-                     "Mode of Payment   : " + modeOfPayment + "\n" +
-                    "Total -------------------------------------------" + billTotal;
+    public static String formatProcedurePrice(String procedure, int price, int totalWidth) {
+        // Format price with 2 decimal places
+        String priceStr = String.format("%d", price);
+        int dashCount = totalWidth - procedure.length() - priceStr.length();
+        // Build the string with correct spacing
+        return procedure + "-".repeat(Math.max(0, dashCount)) + priceStr;
+    }
+    public static String generateBill(int billID, int billPatientID, Map<String, Integer> selectedProcedures, LocalDate billDate, int billTotal){
+            StringBuilder formattedProcedures = new StringBuilder();
 
+            int totalWidth = 53;
+
+            for (Map.Entry<String, Integer> entry : selectedProcedures.entrySet()) {
+                String formatted = formatProcedurePrice(entry.getKey(), entry.getValue(), totalWidth);
+                formattedProcedures.append(formatted).append("\n");
+            }
+                   return
+                    "Ph.Medial--------------------------------------------\n" +
+                    "Bill ID : " + billID + "\n" +
+                    getNameDB("Patients", billPatientID, "PatientID") + "----------------------------------" + billDate + "\n" +
+                    "----------------------------------------------------------"+ "\n" +
+                    "Procedures:\n" +
+                    formattedProcedures +
+                    "----------------------------------------------------------"+ "\n" +
+                    "Total --------------------------------------------" + billTotal;
         }
+
 }

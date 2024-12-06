@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.medicalproject.Controllers.SearchController">
+   <children>
+      <VBox layoutX="-2.0" prefHeight="400.0" prefWidth="606.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox alignment="CENTER" prefHeight="63.0" prefWidth="606.0" spacing="10.0" style="-fx-background-color: #444444;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <children>
+                  <Label style="-fx-padding: 10;" text="Search" textFill="WHITE">
+                     <font>
+                        <Font size="32.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="searchQuery" alignment="CENTER" prefHeight="18.0" prefWidth="166.0" style="-fx-padding: 10;" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="82.0" prefWidth="600.0" spacing="50.0" style="-fx-background-color: #444444;">
+               <children>
+                  <Button fx:id="searchDoctors" mnemonicParsing="false" onAction="#setSearchDoctors" style="-fx-border-radius: 10; -fx-background-color: #5762D5;" text="Doctors" textFill="WHITE" />
+                  <Button fx:id="searchAppointments" mnemonicParsing="false" onAction="#setSearchAppointments" style="-fx-border-radius: 10; -fx-background-color: #5762D5;" text="Appointments" textFill="WHITE" />
+                  <Button fx:id="searchPatients" mnemonicParsing="false" onAction="#setSearchPatients" style="-fx-border-radius: 10; -fx-background-color: #5762D5;" text="Patients" textFill="WHITE" />
+                  <Button fx:id="searchBills" mnemonicParsing="false" onAction="#setSearchBills" style="-fx-border-radius: 10; -fx-background-color: #5762D5;" text="Bills" textFill="WHITE" />
+               </children>
+            </HBox>
+            <HBox prefHeight="261.0" prefWidth="600.0" style="-fx-padding: 20;" VBox.vgrow="ALWAYS">
+               <children>
+                  <ListView fx:id="listQuery" fixedCellSize="80.0" prefHeight="257.0" prefWidth="504.0" style="-fx-padding: 20;" HBox.hgrow="ALWAYS" />
+                  <VBox alignment="CENTER" prefHeight="217.0" prefWidth="147.0" spacing="40.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Button fx:id="viewDetailsBtn" mnemonicParsing="false" onAction="#viewDetails" prefHeight="34.0" prefWidth="92.0" style="-fx-background-color: #E8871E;" text="View Details" textFill="WHITE" />
+                        <Button fx:id="updateDetailsBtn" mnemonicParsing="false" prefHeight="34.0" prefWidth="92.0" style="-fx-background-color: #9191E9;" text="Update" textFill="WHITE" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

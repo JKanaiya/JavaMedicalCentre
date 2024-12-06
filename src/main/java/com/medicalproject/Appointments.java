@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 import java.util.Scanner;
 
 import static com.medicalproject.DB.DBCRUD.addAppointment;
+import static com.medicalproject.TimeControl.convertToLocalDateTime;
 
 
 public class Appointments{
 //    replace with data from Java DataDb
-    public void createAppointment(String time, String date, String Specialization){
-       TimeControl tc = new TimeControl();
-       LocalDateTime dateTime = tc.convertSimpleToLocalDateTime(time, date);
+    public static void createAppointment(String time, String date, String Specialization){
+       LocalDateTime dateTime = convertToLocalDateTime(time, date);
         if(!DBCRUD.getSpecializedMap(Specialization, dateTime).isEmpty()){
             try(Scanner scan = new Scanner(System.in);){
                 System.out.println("Please enter the details of the appointment: PatientID, DoctorID, Reason");

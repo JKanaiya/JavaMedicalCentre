@@ -36,13 +36,10 @@ public class LoginController {
 
     public void loginButtonOnAction(ActionEvent ae){
         if(!IDTextField.getText().isBlank() && !PasswordTextField.getText().isBlank()){
-            System.out.println(PasswordTextField.getText().hashCode());
-            String pass = "hashed";
-            System.out.println(pass.hashCode());
-
             if (attemptLogin(Integer.parseInt(IDTextField.getText()), PasswordTextField.getText())){
                 Stage stage = (Stage) LoginBtn.getScene().getWindow();
                 stage.close();
+                System.out.println(getRole());
 //              load the appropriate stage here
             }
         }

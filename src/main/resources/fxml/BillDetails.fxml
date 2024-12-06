@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="436.0" prefWidth="644.0" style="-fx-background-color: #404040;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.medicalproject.Controllers.BillDetailsController">
+    <children>
+        <VBox prefHeight="496.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="600.0" style="-fx-padding: 15;">
+                    <children>
+                        <Label text="Ph." textFill="#d83131">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Label>
+                        <Label text="Medical" textFill="WHITE">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="73.0" prefWidth="600.0" text="Bill Details" textFill="WHITE">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+                <HBox alignment="CENTER" prefHeight="67.0" prefWidth="600.0" spacing="10.0">
+                    <children>
+                  <HBox alignment="CENTER" prefHeight="55.0" prefWidth="191.0">
+                     <children>
+                                <Label text="PatientID:" textFill="WHITE">
+                           <font>
+                              <Font size="15.0" />
+                           </font></Label>
+                        <Label fx:id="patientID" prefHeight="24.0" prefWidth="114.0" textFill="#00d9b5">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="55.0" prefWidth="168.0">
+                     <children>
+                              <Label text="BillID:" textFill="WHITE">
+                                  <font>
+                                      <Font size="15.0" />
+                                  </font>
+                              </Label>
+                              <Label fx:id="billID" prefHeight="21.0" prefWidth="47.0" textFill="#00d9b5">
+                                  <font>
+                                      <Font name="System Bold" size="15.0" />
+                                  </font>
+                              </Label>
+                     </children>
+                  </HBox>
+                    </children>
+                </HBox>
+            <HBox alignment="CENTER" prefHeight="67.0" prefWidth="600.0" spacing="10.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="55.0" prefWidth="191.0">
+                     <children>
+                        <Label prefHeight="21.0" prefWidth="92.0" text="Amount:" textFill="WHITE">
+                           <font>
+                              <Font size="15.0" />
+                           </font></Label>
+                        <Label fx:id="billAmount" prefHeight="24.0" prefWidth="114.0" textFill="#00d9b5">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="67.0" prefWidth="166.0">
+                     <children>
+                        <Label prefHeight="21.0" prefWidth="148.0" text="Payment Form:" textFill="WHITE" textOverrun="CENTER_WORD_ELLIPSIS">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="paymentForm" prefHeight="21.0" prefWidth="90.0" textFill="#00d9b5">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="67.0" prefWidth="600.0" spacing="10.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="55.0" prefWidth="191.0">
+                     <children>
+                        <Label text="Date:" textFill="WHITE">
+                           <font>
+                              <Font size="15.0" />
+                           </font></Label>
+                        <Label fx:id="billDate" prefHeight="24.0" prefWidth="114.0" textFill="#00d9b5">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="55.0" prefWidth="168.0">
+                     <children>
+                        <Label text="Bill Paid:" textFill="WHITE">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="billPaid" prefHeight="21.0" prefWidth="47.0" textFill="#00d9b5">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

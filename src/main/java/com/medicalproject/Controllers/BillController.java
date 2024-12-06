@@ -11,8 +11,11 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+
+import static com.medicalproject.Bills.generateBill;
 import static com.medicalproject.Bills.procedures;
 import static com.medicalproject.DB.DBCRUD.addBill;
 import static com.medicalproject.DB.DBCRUD.getNewID;
@@ -51,7 +54,7 @@ public class BillController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Initialize our observable lists
+        // Initialize observable lists
         availableItems = FXCollections.observableArrayList();
         selectedItems = FXCollections.observableArrayList();
 
@@ -92,7 +95,13 @@ public class BillController implements Initializable {
         return totalCost;
     }
     public void completeBill(){
+        Map<String, Integer> selectedProcedures  = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : selectedItems) {
+            selectedProcedures.put(entry.getKey(),entry.getValue() );
+        }
         addBill(Integer.parseInt(billID.getText()), Integer.parseInt(billPatientID.getText()), BigDecimal.valueOf(billTotal()) , LocalDateTime.now(), false);
+//        replace with file printing later
+        System.out.println(generateBill(Integer.parseInt(billID.getText()), Integer.parseInt(billPatientID.getText()), selectedProcedures , LocalDate.now(), billTotal()));
         Stage stage = (Stage) billComplete.getScene().getWindow();
         stage.close();
     }
@@ -117,8 +126,7 @@ public class BillController implements Initializable {
                     setText(null);
                 }
                 else {
-                    setText(String.format("%-20s $%8d", item.getKey(),
-                        item.getValue()));
+                    setText(String.format("%-20s $%8d", item.getKey(), item.getValue()));
                 }
             }
         });
