@@ -32,11 +32,14 @@ public class RegisterStaffController implements Initializable {
 
     @FXML // fx:id="staffPasswordConfirm"
     private PasswordField staffPasswordConfirm; // Value injected by FXMLLoader
+    // This method handles the "Register Staff" button click event
     @FXML
     private void addStaff(ActionEvent event){
+        // Check if the passwords entered match
         if(staffPassword.getText().equals(staffPasswordConfirm.getText()) ){
             int check = registerStaff(Integer.parseInt(genStaffID.getText()),
             String.valueOf(staffPassword.getText().hashCode()));
+            // Check if the staff registration was successful
             if(check == 1){
                 System.out.println("success");
                 closeWindow((Node) event.getSource());
@@ -46,6 +49,7 @@ public class RegisterStaffController implements Initializable {
             }
         }
         else {
+            // If passwords do not match, display an error message
             invalidFormMessage.setText("Passwords Do not Match!, Please Correct and Try Again");
         }
     }
@@ -60,6 +64,7 @@ public class RegisterStaffController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Set the generated Staff ID in the label when the window is initialized
         genStaffID.setText(getNewID("Users", "ID"));
     }
 }

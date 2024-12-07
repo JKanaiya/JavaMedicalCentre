@@ -30,7 +30,19 @@ public class PatientDetailsController {
 
     @FXML
     private Label patientWeight;
-
+    /**
+     * Sets the patient's details in the respective labels.
+     * This method updates the UI with the provided patient information.
+     *
+     * @param name The patient's name.
+     * @param gender The patient's gender.
+     * @param iD The patient's unique ID.
+     * @param bloodGroup The patient's blood group.
+     * @param age The patient's age.
+     * @param address The patient's address.
+     * @param height The patient's height (Double type).
+     * @param weight The patient's weight (Double type).
+     */
     public void setPatientDetails(String name, String gender, int iD, String bloodGroup, int age, String address, Double height, Double weight){
         patientName.setText(name);
         patientGender.setText(gender);
@@ -41,6 +53,12 @@ public class PatientDetailsController {
         patientID.setText(String.valueOf(iD));
         patientAge.setText(String.valueOf(age));
     }
+    /**
+     * Deletes the patient with the given ID from the database.
+     * This method will invoke the removeData method to remove the patient's data.
+     *
+     * @param patientID The ID of the patient to be removed.
+     */
     public void deletePatient(int patientID){
         removeData(patientID, "Patients", "PatientID");
     }

@@ -49,16 +49,18 @@ public class RegisterDoctorController implements Initializable {
 
     @FXML
     private Label genDoctorID;
-
-
+    // This method handles the "Register Doctor" button click event
     @FXML
     private void addDoctor(ActionEvent event){
+        // Check if the passwords entered match
         if(!doctorPassword.getText().equals(doctorPasswordConfirm.getText()) ){
+            // If passwords match, proceed with the registration process
             invalidFormMessage.setText("Passwords Do not Match!, Please Correct and Try Again");
         }
             int check = registerDoctor(Integer.parseInt(genDoctorID.getText()),
                     String.valueOf(doctorPassword.getText().hashCode()), doctorSpecialization.getText(),
                     doctorName.getText(), Integer.parseInt(doctorPhoneNumber.getText()), doctorEmail.getText());
+        // Check if the doctor registration was successful
         if(check == 1){
            System.out.println("success");
            closeWindow((Node) event.getSource());
@@ -67,10 +69,13 @@ public class RegisterDoctorController implements Initializable {
             invalidFormMessage.setText("Invalid Details, Please correct and try again");
         }
     }
+    // This method is triggered when the user clicks the "Cancel" button
     @FXML
     private void cancelRegistration(ActionEvent event){
+        // Close the registration window
         closeWindow((Node) event.getSource());
     }
+    // This method closes the window triggered by the event
     public void closeWindow(Node node) {
         Stage stage = (Stage) node.getScene().getWindow();
         stage.close();
@@ -78,6 +83,7 @@ public class RegisterDoctorController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Set the generated Doctor ID to the label when the window is initialized
         genDoctorID.setText(getNewID("Users", "ID"));
     }
 }

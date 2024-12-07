@@ -20,15 +20,14 @@ import static com.medicalproject.TimeControl.*;
  */
 
 public class DBCRUD {
-//    static DataSource dataSource = createDataSource();
+    static HikariConfig config = new HikariConfig("config.properties");
+    static HikariDataSource dataSource = new HikariDataSource(config);
+
     /* * Method to get a map ( DoctorID - Name ) of Doctors that will realistically be available in the dateTime.
      * @param Specialization
      * @param dateTime
      * @return  Map ( DoctorID - Name ) of realistically available Doctors
      */
-    static HikariConfig config = new HikariConfig("config.properties");
-    static HikariDataSource dataSource = new HikariDataSource(config);
-
     public static Map<Integer, String> getSpecializedMap(String Specialization, LocalDateTime dateTime){
         Map<Integer, String> idName = new HashMap<>(); // Initialize the map to hold the ID and Name of the Doctors to return
 //         Declare String with Parameters for PreparedStatement.

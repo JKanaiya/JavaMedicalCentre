@@ -32,12 +32,15 @@ public class RegisterAdminController implements Initializable {
 
     @FXML // fx:id="registerAdminBtn"
     private Button registerAdminBtn; // Value injected by FXMLLoader
-
+    // This method handles the "Register Admin" button click event
     @FXML
     private void addAdmin(ActionEvent event){
+        // Check if the passwords entered match
         if(adminPassword.getText().equals(adminPasswordConfirm.getText()) ){
+            // If passwords match, proceed with the registration process
             int check = registerAdmin(Integer.parseInt(genAdminID.getText()),
                     String.valueOf(adminPassword.getText().hashCode()));
+            // Check if the admin registration was successful
             if(check == 1){
                 System.out.println("success");
                 closeWindow((Node) event.getSource());
@@ -61,6 +64,7 @@ public class RegisterAdminController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Set the generated Admin ID in the label when the window is initialized
         genAdminID.setText(getNewID("Users", "ID"));
     }
 }

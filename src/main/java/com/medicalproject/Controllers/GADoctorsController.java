@@ -37,6 +37,11 @@ public class GADoctorsController {
     private TextField timeSelected;
 //
 
+    /**
+     *  Checks the DB to see if there are any Doctors within the specialized field that are available at the given tim
+     * @param event to close window on complete
+     * @throws IOException
+     */
     @FXML
     private void checkSpecializationAvailability(ActionEvent event) throws IOException {
         String dateFormat = dateSelected.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -61,8 +66,10 @@ public class GADoctorsController {
             errorMessageLabel.setText("Sorry, No Doctors in that field are available at that time");
         }
     }
-
-
+    /**
+     *  Loads and displays the Appointment Form
+     * @throws IOException
+     */
     @FXML
     private void loadAppointmentForm() throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/AppointmentForm.fxml")));

@@ -42,10 +42,11 @@ public class RegisterPatientController implements Initializable {
 
     @FXML
     private TextField weight;
-
+    // This method is triggered when the user clicks the "Add Patient" button
     @FXML
     private void addPatient(ActionEvent event){
         int check = registerPatientDB(patientName.getText(), patientAddress.getText(), gender.getText(), Integer.parseInt(age.getText()), bloodGroup.getText(), Double.parseDouble(weight.getText()), Double.parseDouble(height.getText()));
+        // If the registration is successful, close the window, otherwise show an error message
         if(check == 1){
             System.out.println("success");
             closeWindow((Node) event.getSource());
@@ -55,16 +56,20 @@ public class RegisterPatientController implements Initializable {
         }
     }
     @FXML
+    // This method is triggered when the user clicks the "Cancel" button
     private void cancelRegisterBtn(ActionEvent event){
         closeWindow((Node) event.getSource());
     }
+    // Closes the current window triggered by the event
     public void closeWindow(Node node) {
-        Stage stage = (Stage) node.getScene().getWindow();
-        stage.close();
+        Stage stage = (Stage) node.getScene().getWindow();  // Get the current window (stage)
+        stage.close();  // Close the window
     }
 
+    // This method is called when the controller is initialized
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Set the generated Patient ID in the label when the window is initialized
         genPatientID.setText(getNewID("Patients", "PatientID"));
     }
 }
